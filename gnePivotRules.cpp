@@ -476,9 +476,9 @@ Variable *GenNetEq::getNextCandidate(bool useWeighted)
         bool cVarAtLB = (cVar->setLoc == L_var);
         double rc;
         if (cVar->varType == ARC_VAR) {
-            rc = computeArcRedCost(dynamic_cast<ArcVar *>(cVar));
+            rc = computeArcRedCost((ArcVar*)cVar);
         } else { // cVar->varType == EQF_VAR
-            rc = computeEqfRedCost(dynamic_cast<EqFlowVar *>(cVar));
+            rc = computeEqfRedCost((EqFlowVar*)cVar);
         }
         if (((cVarAtLB) && (rc < (-1.0 * ROUNDOFF_TOLERANCE))) ||
             ((!cVarAtLB) && (rc > ROUNDOFF_TOLERANCE))) {
@@ -569,9 +569,9 @@ Variable *GenNetEq::getNextCandidate2(bool useWeighted)
         double rc;
         if (itersSinceUpdate > 0) {
             if (clVar->varType == ARC_VAR) {
-                rc = computeArcRedCost(dynamic_cast<ArcVar *>(clVar));
+                rc = computeArcRedCost((ArcVar*)clVar);
             } else { // clVar->varType == EQF_VAR
-                rc = computeEqfRedCost(dynamic_cast<EqFlowVar *>(clVar));
+                rc = computeEqfRedCost((EqFlowVar*)clVar);
             }
         } else { // Reduced cost is up to date
             rc = clVar->redCost;
@@ -580,7 +580,7 @@ Variable *GenNetEq::getNextCandidate2(bool useWeighted)
             ((!clVarAtLB) && (rc > ROUNDOFF_TOLERANCE))) {
             isOptimal = false;
             if ((clVar->varType == EQF_VAR) && (useWeighted)) {
-                rc /= (dynamic_cast<EqFlowVar *>(clVar))->numOrigArcs;
+                rc /= ((EqFlowVar*)clVar)->numOrigArcs;
             }
             if (largestViolation < fabs(rc)) {
                 largestViolation = fabs(rc);

@@ -383,11 +383,11 @@ void Graph::processArcLine(string nextLine)
 {
     int result;
     int n1, n2, eqFlowInd;
-    double tempLB, tempUB, tempCost, tempMult;
+    double tempLB, tempUB, tempCost, tempMult, tempProp;
 
 //    printf("Arc line: %s\n", nextLine.c_str());
     result = sscanf(nextLine.c_str(), "a %d %d %lf %lf %lf %lf %d \n", 
-                &n1, &n2, &tempLB, &tempUB, &tempCost, &tempMult, &eqFlowInd);
+                &n1, &n2, &tempLB, &tempUB, &tempCost, &tempMult, &eqFlowInd, &tempProp);
     if (result != 7) {
         printf("Improperly formatted arc line\n");
         exit(1);
@@ -412,10 +412,12 @@ void Graph::processArcLine(string nextLine)
     if (eqFlowInd - EQF_IND_OFFSET >= 0) {
         eqFlowNodeValues.increment(n1 - NODE_IND_OFFSET, 
                                    eqFlowInd - EQF_IND_OFFSET,  
-                                    1.0);
+                                    tempProp);
         eqFlowNodeValues.increment(n2 - NODE_IND_OFFSET, 
                                    eqFlowInd - EQF_IND_OFFSET, 
-                                   -1.0 * tempMult);
+                                   -tempProp * tempMult);
+
+		arcCapacities.set(n1 - NODE_IND_OFFSET, n2 - NODE_IND_OFFSET, tempUB / tempProp);
     }
 
     if (maxArcCost < tempCost) {

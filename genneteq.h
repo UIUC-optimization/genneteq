@@ -271,6 +271,7 @@ class GenNetEq
     Variable *quickSelect(bool useWeighted = false);
 
 public:
+	void printFlows() const;
 /*
 // Debug
     void printAll(bool pretty = false) const;

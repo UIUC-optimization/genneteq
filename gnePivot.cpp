@@ -29,12 +29,12 @@ void GenNetEq::pivot()
 {
     // Compute yFlow [O(ns + g(s))]
     if ((eVar->varType == ARC_VAR) && 
-        (nodes[dynamic_cast<ArcVar *>(eVar)->tail].memberOfTreeType==TYPE_I)&&
-        (nodes[dynamic_cast<ArcVar *>(eVar)->head].memberOfTreeType==TYPE_I)){
+        (nodes[((ArcVar*)eVar)->tail].memberOfTreeType==TYPE_I)&&
+        (nodes[((ArcVar*)eVar)->head].memberOfTreeType==TYPE_I)){
         // If the entering variable is an arc that crosses two type I trees, 
         // then the equal flow sets will not change and we can save computing 
         // time by ignoring them
-        pivotTI(dynamic_cast<ArcVar *>(eVar));
+        pivotTI((ArcVar*)eVar);
     } else {
         // Otherwise the entering variable is either an arc that involves at 
         // least one type II tree or an equal flow set, in which case the 
@@ -362,8 +362,8 @@ void GenNetEq::updatePivotingStats()
     totalPivots++;
 
     if (eVar->varType == ARC_VAR) {
-        int u = dynamic_cast<ArcVar *>(eVar)->tail;
-        int v = dynamic_cast<ArcVar *>(eVar)->head;
+        int u = ((ArcVar*)eVar)->tail;
+        int v = ((ArcVar*)eVar)->head;
         if (lVar->varType == ARC_VAR) {
             arcArcPivots++;
         } else if (lVar->varType == EQF_VAR) {
@@ -409,14 +409,14 @@ double GenNetEq::computeMinDelta(Variable *var)
     // Used to compute allowable movement when pivoting on given variable
     // Compute yFlow [O(ns + g(s))]
     if ((var->varType == ARC_VAR) && 
-        (nodes[dynamic_cast<ArcVar *>(var)->tail].memberOfTreeType==TYPE_I)&&
-        (nodes[dynamic_cast<ArcVar *>(var)->head].memberOfTreeType==TYPE_I)){
+        (nodes[((ArcVar*)var)->tail].memberOfTreeType==TYPE_I)&&
+        (nodes[((ArcVar*)var)->head].memberOfTreeType==TYPE_I)){
         // If the entering variable is an arc that crosses two type I trees, 
         // then the equal flow sets will not change and we can save computing 
         // time by ignoring them
-        int uID = nodes[dynamic_cast<ArcVar *>(var)->tail].memberOfTreeID;
-        int vID = nodes[dynamic_cast<ArcVar *>(var)->head].memberOfTreeID;
-        computeFlowsPivotingTI(dynamic_cast<ArcVar *>(var), setBtI[uID], 
+        int uID = nodes[((ArcVar*)var)->tail].memberOfTreeID;
+        int vID = nodes[((ArcVar*)var)->head].memberOfTreeID;
+        computeFlowsPivotingTI((ArcVar*)var, setBtI[uID], 
                                                              setBtI[vID]);
     } else {
         // Otherwise the entering variable is either an arc that involves at 
@@ -488,12 +488,12 @@ void GenNetEq::insertIntoB(Variable *var)
 {
     // Variable should be added to B
     if (var->varType == ARC_VAR) {
-        setBarc.push_back(dynamic_cast<ArcVar *>(var));
+        setBarc.push_back((ArcVar*)(var));
         var->setLoc = B_var;
         var->setInd = setBarc.size() - 1;
-        Tree::insertIntoTrees(dynamic_cast<ArcVar *>(var));
+        Tree::insertIntoTrees((ArcVar*)(var));
     } else { // var->varType == EQF_VAR
-        setBeqf.push_back(dynamic_cast<EqFlowVar *>(var));
+        setBeqf.push_back((EqFlowVar*)(var));
         var->setLoc = B_var;
         var->setInd = setBeqf.size() - 1;
     }
@@ -510,7 +510,7 @@ void GenNetEq::removeFromB(Variable *var)
         setBarc[prevInd] = varToMove;
         varToMove->setInd = prevInd;
         setBarc.pop_back();
-        Tree::removeFromTrees(dynamic_cast<ArcVar *>(var));
+        Tree::removeFromTrees((ArcVar*)(var));
     } else { // var->varType == EQF_VAR
         int prevInd = var->setInd;
         EqFlowVar *varToMove = setBeqf.back();
@@ -528,11 +528,11 @@ void GenNetEq::insertIntoL(Variable *var)
 { 
     // Variable should be added to L
     if (var->varType == ARC_VAR) {
-        setNBarc.push_back(dynamic_cast<ArcVar *>(var));
+        setNBarc.push_back((ArcVar*)(var));
         var->setLoc = L_var;
         var->setInd = setNBarc.size() - 1;
     } else { // var->varType == EQF_VAR
-        setNBeqf.push_back(dynamic_cast<EqFlowVar *>(var));
+        setNBeqf.push_back((EqFlowVar*)(var));
         var->setLoc = L_var;
         var->setInd = setNBeqf.size() - 1;
     }
@@ -566,11 +566,11 @@ void GenNetEq::insertIntoU(Variable *var)
 {
     // Variable should be added to U
     if (var->varType == ARC_VAR) {
-        setNBarc.push_back(dynamic_cast<ArcVar *>(var));
+        setNBarc.push_back((ArcVar*)(var));
         var->setLoc = U_var;
         var->setInd = setNBarc.size() - 1;
     } else { // var->varType == EQF_VAR
-        setNBeqf.push_back(dynamic_cast<EqFlowVar *>(var));
+        setNBeqf.push_back((EqFlowVar*)(var));
         var->setLoc = U_var;
         var->setInd = setNBeqf.size() - 1;
     }

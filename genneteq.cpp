@@ -322,3 +322,17 @@ void GenNetEq::setVariableCosts()
     return;
 }
 
+void GenNetEq::printFlows() const
+{
+	printf("Normal Arcs:\n");
+	for (int i = 0; i < arcVars.size(); ++i)
+		if (arcVars[i]->flow != 0)
+			printf("  (%d, %d): %0.5f\n", arcVars[i]->tail, arcVars[i]->head, arcVars[i]->flow);
+
+	printf("Proportional Flow Arcs:\n");
+	for (int i = 0; i < eqFlowVars.size(); ++i)
+		if (arcVars[i]->flow != 0)
+			printf("  EFS %d: %0.5f\n", i, eqFlowVars[i]->flow);
+
+}
+

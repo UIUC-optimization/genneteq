@@ -61,7 +61,8 @@ void GenNetEq::setFlowValues(int updateOption)
     // Now we assume that the new flow values for the basic variables are 
     // contained in the deltaFlow fields, so we can copy the flow values over 
     // to the standard flow field or apply a check as desired. [O(m' + p)]
-    if (updateOption == 0) { // Apply standard recompute
+    if (updateOption == 0) // Apply standard recompute
+	{
         for (int bArcInd = 0; bArcInd < setBarc.size(); ++bArcInd) {
             ArcVar *av = setBarc[bArcInd];
             av->flow = av->deltaFlow;
@@ -399,7 +400,7 @@ void GenNetEq::setSupplyWithThetas(Variable *var)
 {
     int s = setBeqf.size();
     if (var->varType == ARC_VAR) {
-        ArcVar *eav = dynamic_cast<ArcVar *>(var);
+        ArcVar *eav = (ArcVar*)var;
         // Set up variable supplies of 0 at all nodes [O(ns)]
         for (int i = 0; i < numNodes; ++i) {
             nodes[i].supplyWithThetas.resize(s + 1, 0.0);
@@ -421,7 +422,7 @@ void GenNetEq::setSupplyWithThetas(Variable *var)
             }
         }
     } else { // var->varType == EQF_VAR
-        vector<double> &nodeVals = dynamic_cast<EqFlowVar *>(var)->nodeVals;
+        vector<double> &nodeVals = ((EqFlowVar*)var)->nodeVals;
         if (var->setLoc == L_var) {
             for (int i = 0; i < numNodes; ++i) {
                 nodes[i].supplyWithThetas.resize(s + 1, 0.0);
@@ -441,7 +442,7 @@ void GenNetEq::setSupplyWithThetas(Variable *var)
 void GenNetEq::setSupplyWithEqs(Variable *var)
 {
     if (var->varType == ARC_VAR) {
-        ArcVar *eav = dynamic_cast<ArcVar *>(var);
+        ArcVar *eav = (ArcVar*)var;
         // Update the supplies at the given arc
         if (eav->setLoc == L_var) { // eav at LB
             if (eav->tail == eav->head) {
@@ -459,7 +460,7 @@ void GenNetEq::setSupplyWithEqs(Variable *var)
             }
         }
     } else { // var->varType == EQF_VAR
-        vector<double> &nodeVals = dynamic_cast<EqFlowVar *>(var)->nodeVals;
+        vector<double> &nodeVals = ((EqFlowVar*)var)->nodeVals;
         if (var->setLoc == L_var) {
             for (int i = 0; i < numNodes; ++i) {
                 nodes[i].supplyWithEq.a0 = -1.0 * nodeVals[i];

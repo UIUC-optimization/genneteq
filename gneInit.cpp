@@ -282,7 +282,7 @@ void GenNetEq::formInitialBFS(Graph *g)
         // NOTE: Revised this slightly; use of varIndex is safer
         for (int i = 0; i < vars.size(); ++i) {
             if (vars[i]->isArtificial && vars[i]->varType == ARC_VAR) {
-                ArcVar *av = dynamic_cast<ArcVar *>(vars[i]);
+                ArcVar *av = (ArcVar*)vars[i];
                 if ((av->flow < av->LB - ROUNDOFF_TOLERANCE) ||
                     (av->flow > av->UB + ROUNDOFF_TOLERANCE)) {
                     av->mult = 1.0 / av->mult;

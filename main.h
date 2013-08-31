@@ -34,10 +34,10 @@
 #define QSW 17
 
 const double ROUNDOFF_TOLERANCE = 
-//  1.0e-8;     // 0.00000001           Old value that worked
+  1.0e-8;     // 0.00000001           Old value that worked
 //  1.0e-10;    // 0.0000000001         New value to try
 //  1.0e-12;    // 0.000000000001       New value that worked for most cases
-    1.0e-13;    // 0.0000000000001      Further refinement, worked for bad.raw
+//    1.0e-13;    // 0.0000000000001      Further refinement, worked for bad.raw
 //  1.0e-14;    // 0.00000000000001    
 //  1.0e-15;    // 0.000000000000001    Failed for bad.raw - too tight
 //  std::numeric_limits<double>::epsilon(); // Ideal, but not enough slack
